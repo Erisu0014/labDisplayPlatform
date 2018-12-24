@@ -2,6 +2,7 @@ package org.software.ysu.pojo;
 
 import java.util.List;
 
+
 public class Assort {
     private Integer id;
 
