@@ -48,5 +48,15 @@ public class shareController {
         return assortsMaterials;
     }
 
+    @RequestMapping("getMoreMaterials.do")
+    public  List<Material> getMoreMaterials(String assortId){
+        int ID = Integer.parseInt(assortId);
+        System.out.println(ID);
+        MaterialExample materialExample = new MaterialExample();
+        materialExample.createCriteria().andAssortIdEqualTo(ID);
+        List<Material> materials = materialService.showMaterials(materialExample);
+        return materials;
+    }
+
 
 }

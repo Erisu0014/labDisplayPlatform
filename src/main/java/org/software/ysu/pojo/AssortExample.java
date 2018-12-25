@@ -293,6 +293,7 @@ public class AssortExample {
             addCriterion("assort_parentid not between", value1, value2, "assortParentid");
             return (Criteria) this;
         }
+
     }
 
     public static class Criteria extends GeneratedCriteria {

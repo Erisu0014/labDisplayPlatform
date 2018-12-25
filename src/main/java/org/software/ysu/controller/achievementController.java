@@ -1,16 +1,17 @@
 package org.software.ysu.controller;
 
-import org.software.ysu.pojo.IntroductionExample;
-import org.software.ysu.pojo.IntroductionWithBLOBs;
-import org.software.ysu.pojo.Page;
-import org.software.ysu.pojo.tableResponse;
+import org.software.ysu.pojo.*;
+import org.software.ysu.service.Interface.IAssortService;
 import org.software.ysu.service.Interface.IIntroService;
+import org.software.ysu.service.Interface.ISubjectService;
+import org.software.ysu.service.Interface.ITeamService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Erisu
@@ -23,6 +24,12 @@ import java.util.List;
 public class achievementController {
     @Resource
     IIntroService introService;
+    @Resource
+    ISubjectService subjectService;
+    @Resource
+    ITeamService teamService;
+    @Resource
+    IAssortService assortService;
     @RequestMapping("getAchievements.do")
     public tableResponse getSubjects(Page page) {
         System.out.println("page="+page.toString());
@@ -52,5 +59,35 @@ public class achievementController {
             introPages.add(intros.get(i));
         }
         return introPages;
+    }
+    @RequestMapping("singleAchievements.do")
+    public Introduction getSingleAchievement(int introId){
+        IntroductionWithBLOBs introduction=introService.getIntroById(introId);
+        return introduction;
+    }
+    @RequestMapping("singleSubject.do")
+    public Subject getSingleSubject(int introId){
+        IntroductionWithBLOBs introduction=introService.getIntroById(introId);
+        SubjectExample subjectExample=new SubjectExample();
+        subjectExample.createCriteria().andSubjectIdEqualTo(introduction.getSubjectId());
+        return subjectService.showSubjects(subjectExample).get(0);
+    }
+    @RequestMapping("teamInfo.do")
+    public TeamWithBLOBs showTeam(){
+        TeamWithBLOBs team=teamService.getTeam(new TeamExample()).get(0);
+        return team;
+    }
+    @RequestMapping("assortInfo.do")
+    public List<Assort> showAssorts(){
+        AssortExample assortExample=new AssortExample();
+        assortExample.createCriteria().andAssortParentidGreaterThan(0);
+        List<Assort>assorts=assortService.showAssorts(assortExample);
+        Random rand = new Random();
+        List<Assort>realAssorts=new ArrayList<>();
+        for(int i=0;i<5;i++){
+            int temp = rand.nextInt(assorts.size());
+            realAssorts.add(assorts.get(temp));
+        }
+        return realAssorts;
     }
 }
